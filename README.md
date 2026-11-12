@@ -12,7 +12,13 @@ A small native macOS teleprompter (SwiftUI, macOS 14+).
 
 Optional: `cp -R build/Teleprompter.app /Applications/`
 
-On the first Follow Voice run, macOS asks for Microphone and Speech Recognition access.
+Requires macOS 14+ and the Xcode Command Line Tools (`xcode-select --install`).
+
+### Voice setup
+- **Turn on Dictation** (System Settings › Keyboard › Dictation). Apple's speech recognizer won't run without it.
+- On the first Follow Voice run, macOS asks for Microphone and Speech Recognition access.
+- Pick your microphone with the 🎤 picker if your system default is a virtual device (e.g. a streaming mixer).
+- The "Heard: …" line shows what the recognizer is picking up. Diagnostics go to `~/Library/Logs/Teleprompter.log`.
 Launch it with `open` or Finder rather than running the binary from Terminal, so the permissions belong to the app.
 
 ## Keys (while prompting)
@@ -24,7 +30,7 @@ Launch it with `open` or Finder rather than running the binary from Terminal, so
 | ← / → | Move one word back/forward (Voice) |
 | + / − | Text size |
 | R | Back to top |
-| M | Mirror (for beam-splitter glass) |
+| M | Flip horizontal (for beam-splitter glass) |
 | Esc | Back to editor |
 
 You can also scroll by hand with the trackpad. In Voice mode, wherever you stop becomes the new position.
