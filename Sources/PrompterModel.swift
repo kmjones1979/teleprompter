@@ -15,6 +15,7 @@ final class PrompterModel: ObservableObject {
     @Published var fontSize: Double { didSet { defaults.set(fontSize, forKey: "fontSize") } }
     @Published var speed: Double { didSet { defaults.set(speed, forKey: "speed") } }
     @Published var mirror: Bool { didSet { defaults.set(mirror, forKey: "mirror") } }
+    @Published var flipVertical: Bool { didSet { defaults.set(flipVertical, forKey: "flipVertical") } }
     @Published var inputDeviceUID: String {
         didSet {
             defaults.set(inputDeviceUID, forKey: "inputDeviceUID")
@@ -45,6 +46,7 @@ final class PrompterModel: ObservableObject {
         fontSize = defaults.object(forKey: "fontSize") as? Double ?? 56
         speed = defaults.object(forKey: "speed") as? Double ?? 60
         mirror = defaults.bool(forKey: "mirror")
+        flipVertical = defaults.bool(forKey: "flipVertical")
         floatOnTop = defaults.bool(forKey: "floatOnTop")
         inputDeviceUID = defaults.string(forKey: "inputDeviceUID") ?? ""
         inputDevices = AudioDevices.inputs()

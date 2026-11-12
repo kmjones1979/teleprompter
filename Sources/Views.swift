@@ -100,8 +100,10 @@ struct EditorView: View {
                 }
                 .disabled(model.mode == .voice)
                 .help("Auto-scroll speed")
-                Toggle("Flip Horizontal", isOn: $model.mirror)
-                    .help("Mirror the text for teleprompter glass (M)")
+                Toggle("Flip H", isOn: $model.mirror)
+                    .help("Flip horizontally for teleprompter glass (H)")
+                Toggle("Flip V", isOn: $model.flipVertical)
+                    .help("Flip vertically, e.g. for an iPad teleprompter stand (V)")
                 MicPicker().frame(width: 230)
                 Toggle("Keep on top", isOn: $model.floatOnTop)
                     .help("Float above other windows, e.g. over a video call")
@@ -130,7 +132,8 @@ struct PrompterView: View {
             ZStack {
                 PrompterTextView(model: model)
                 GeometryReader { geo in
-                    let y = geo.size.height * readingLineFraction
+                    // The reading line moves with the text when it's flipped vertically.
+                    let y = geo.size.height * (model.flipVertical ? 1 - readingLineFraction : readingLineFraction)
                     Image(systemName: "arrowtriangle.right.fill")
                         .font(.system(size: 22))
                         .foregroundStyle(.yellow.opacity(0.85))
@@ -206,7 +209,8 @@ struct PrompterView: View {
                 case "=", "+": model.adjustFont(4)
                 case "-", "_": model.adjustFont(-4)
                 case "r": model.restartFromTop()
-                case "m": model.mirror.toggle()
+                case "m", "h": model.mirror.toggle()
+                case "v": model.flipVertical.toggle()
                 default: return event
                 }
             }
@@ -273,7 +277,12 @@ struct PrompterHUD: View {
                 Image(systemName: "arrow.left.and.right.righttriangle.left.righttriangle.right")
             }
             .toggleStyle(.button)
-            .help("Flip horizontal for teleprompter glass (M)")
+            .help("Flip horizontally (H)")
+            Toggle(isOn: $model.flipVertical) {
+                Image(systemName: "arrow.up.and.down.righttriangle.up.righttriangle.down")
+            }
+            .toggleStyle(.button)
+            .help("Flip vertically (V)")
             Button { model.restartFromTop() } label: { Image(systemName: "backward.end.fill") }
                 .help("Back to the top (R)")
         }

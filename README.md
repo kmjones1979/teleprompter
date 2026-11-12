@@ -30,7 +30,8 @@ Launch it with `open` or Finder rather than running the binary from Terminal, so
 | ← / → | Move one word back/forward (Voice) |
 | + / − | Text size |
 | R | Back to top |
-| M | Flip horizontal (for beam-splitter glass) |
+| H (or M) | Flip horizontal |
+| V | Flip vertical. Turn on both H and V for a 180° rotation, which most iPad teleprompter stands need |
 | Esc | Back to editor |
 
 You can also scroll by hand with the trackpad. In Voice mode, wherever you stop becomes the new position.

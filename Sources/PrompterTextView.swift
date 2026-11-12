@@ -26,11 +26,13 @@ struct PrompterTextView: NSViewRepresentable {
         context.coordinator.attach(scroll: scroll, textView: tv)
         let container = FlipContainer(content: scroll)
         container.mirrored = model.mirror
+        container.flippedVertically = model.flipVertical
         return container
     }
 
     func updateNSView(_ nsView: FlipContainer, context: Context) {
         nsView.mirrored = model.mirror
+        nsView.flippedVertically = model.flipVertical
         context.coordinator.update()
     }
 
@@ -224,10 +226,12 @@ struct PrompterTextView: NSViewRepresentable {
     }
 }
 
-/// Hosts the scroll view and mirrors its rendering horizontally when `mirrored` is on.
+/// Hosts the scroll view and flips its rendering horizontally and/or vertically
+/// (for teleprompter glass). Both together equal a 180° rotation.
 final class FlipContainer: NSView {
     private let content: NSView
     var mirrored = false { didSet { if mirrored != oldValue { needsLayout = true } } }
+    var flippedVertically = false { didSet { if flippedVertically != oldValue { needsLayout = true } } }
 
     init(content: NSView) {
         self.content = content
@@ -244,14 +248,16 @@ final class FlipContainer: NSView {
         super.layout()
         content.frame = bounds
         guard let layer else { return }
+        // Flip around the layer's anchor point so the content stays in place.
+        var t = CATransform3DIdentity
         if mirrored {
-            // Mirror around the layer's anchor point so content stays in place.
-            var t = CATransform3DIdentity
             t.m11 = -1
             t.m41 = bounds.width - 2 * layer.anchorPoint.x * bounds.width
-            layer.sublayerTransform = t
-        } else {
-            layer.sublayerTransform = CATransform3DIdentity
         }
+        if flippedVertically {
+            t.m22 = -1
+            t.m42 = bounds.height - 2 * layer.anchorPoint.y * bounds.height
+        }
+        layer.sublayerTransform = t
     }
 }
